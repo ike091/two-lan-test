@@ -13,22 +13,24 @@ pc = portal.Context()
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
 
+CENTOS7_IMG = 'urn:publicid:IDN+emulab.net+image+emulab-ops:CENTOS7-64-STD'
+
 # Gateway node
 node_gw = request.RawPC('gw')
-node_gw.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU16-64-STD'
+node_gw.disk_image = CENTOS7_IMG
 node_gw.setFailureAction('nonfatal')
 iface0 = node_gw.addInterface('eth0', pg.IPv4Address('192.168.1.3','255.255.255.0'))
 iface1 = node_gw.addInterface('eth1', pg.IPv4Address('10.10.1.3','255.255.255.0'))
 
 # Node in
 node_in = request.RawPC('in')
-node_in.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU16-64-STD'
+node_in.disk_image = CENTOS7_IMG
 node_in.setFailureAction('nonfatal')
 iface2 = node_in.addInterface('eth0', pg.IPv4Address('10.10.1.2','255.255.255.0'))
 
 # Node out
 node_out = request.RawPC('out')
-node_out.disk_image = 'urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU16-64-STD'
+node_out.disk_image = CENTOS7_IMG
 node_out.setFailureAction('nonfatal')
 iface3 = node_out.addInterface('eth0', pg.IPv4Address('192.168.1.2','255.255.255.0'))
 
