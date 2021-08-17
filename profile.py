@@ -1,11 +1,9 @@
 """Two nodes with a router in the middle"""
 
-# Import the Portal object.
 import geni.portal as portal
-# Import the ProtoGENI library.
 import geni.rspec.pg as pg
-# Import the Emulab specific extensions.
 import geni.rspec.emulab as emulab
+import geni.rspec.igext as igext
 
 # Create a portal object,
 pc = portal.Context()
@@ -14,6 +12,12 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 CENTOS7_IMG = 'urn:publicid:IDN+emulab.net+image+emulab-ops:CENTOS7-64-STD'
+
+# Create some user-configurable parameters
+pc.defineParameter('public_ip_count', 'The number of additional public IPs to allocate', portal.ParameterType.INTEGER, 2)
+
+# TODO: validate parameters
+params = pc.bindParameters()
 
 # Gateway node
 node_gw = request.RawPC('gw')
@@ -47,6 +51,10 @@ link_out_link.addInterface(iface3)
 link_out_link.addInterface(iface0)
 
 request.setRoutingStyle('static')
+
+# Request a pool of dynamic publically routable ip addresses - pool name cannot contain underscores - hidden bug
+addressPool = igext.AddressPool('addressPool', int(params.public_ip_count))
+request.addResource(addressPool)
 
 # Print the generated rspec
 pc.printRequestRSpec(request)
